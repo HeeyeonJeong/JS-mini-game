@@ -4,6 +4,21 @@ document.querySelector("#exec").addEventListener("click",function () {
     const mine = parseInt(document.querySelector("#mine").value);
     console.log(hor,ver,mine);
 
+    //지뢰 위치 랜덤 뽑기
+    let 후보 = Array(hor*ver)
+    .fill()
+    .map(function (item, index) {
+        return index;
+    });
+    console.log(후보);
+
+    let 셔플 = [];
+    while (후보.length > 80) {
+    let 이동값 = 후보.splice(Math.floor(Math.random() * 후보.length), 1)[0];
+    셔플.push(이동값);
+    }
+    console.log(셔플);
+
     //지뢰 테이블 만들기
     let dataSet = [];
     const tbody = document.querySelector("#table tbody");
