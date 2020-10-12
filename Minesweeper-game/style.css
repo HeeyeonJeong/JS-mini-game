@@ -2,6 +2,14 @@ table {
   border-collapse: collapse;
 }
 
+tbody {
+  background-color: dimgray;
+}
+
+td.open {
+  background-color: white;
+}
+
 tbody td {
   border: 1px solid black;
   width: 30px;
