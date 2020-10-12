@@ -1,6 +1,7 @@
 const tbody = document.querySelector("#table tbody");
 let dataSet = [];
 
+
 document.querySelector("#exec").addEventListener("click",function () {
     const hor = parseInt(document.querySelector("#hor").value);
     const ver = parseInt(document.querySelector("#ver").value);
@@ -30,6 +31,7 @@ document.querySelector("#exec").addEventListener("click",function () {
         for(j = 0; j < ver; j++){
             arr.push(1);
             const td = document.createElement('td');
+            //우클릭시,
             td.addEventListener("contextmenu",function (e) {
                 e.preventDefault();
                 //몇번째 줄, 칸인지 확인하기, 깃발 꽂기
@@ -38,6 +40,7 @@ document.querySelector("#exec").addEventListener("click",function () {
                 let 줄 = Array.prototype.indexOf.call(부모tr.children, e.currentTarget);
                 let 칸 = Array.prototype.indexOf.call(부모tbody.children, 부모tr);
                 console.log(줄, 칸, e.currentTarget);
+                //우클릭시, 두번 - 물음표, 세번 - 원상복구
                 if(e.currentTarget.textContent === "" || e.currentTarget.textContent === "X"){
                     e.currentTarget.textContent = "!";
                 }else if(e.currentTarget.textContent === "!"){
@@ -48,6 +51,26 @@ document.querySelector("#exec").addEventListener("click",function () {
                     }else if(dataSet[칸][줄] === 1) {
                         e.currentTarget.textContent = "";
                     } 
+                }
+            })
+            //클릭시, 터지거나 or 지뢰갯수
+            td.addEventListener("click",function(e){
+                let 부모tr = e.currentTarget.parentNode;
+                let 부모tbody = e.currentTarget.parentNode.parentNode;
+                let 줄 = Array.prototype.indexOf.call(부모tr.children, e.currentTarget);
+                let 칸 = Array.prototype.indexOf.call(부모tbody.children, 부모tr);
+                if(dataSet[칸][줄] === "X"){
+                    e.currentTarget.textContent = "펑";
+                }else{
+                    let 주변 = [dataSet[칸][줄-1], dataSet[칸][줄+1]];
+                    if(dataSet[칸-1]){
+                        주변 = 주변.concat([dataSet[칸-1][줄-1], dataSet[칸-1][줄], dataSet[칸-1][줄+1]]);
+                    }
+                    if(dataSet[칸+1]){
+                        주변 = 주변.concat([dataSet[칸+1][줄-1], dataSet[칸+1][줄], dataSet[칸+1][줄+1]]);
+                    }
+                    console.log(주변)
+                    e.currentTarget.textContent = 주변.filter(value => value === "X").length
                 }
             })
             tr.appendChild(td);
