@@ -1,7 +1,17 @@
 const tbody = document.querySelector("#table tbody");
+const result = document.querySelector("#result");
+let dataSet = [];
+let 중단플래그 = false;
+let 열은칸 = 0;
 
 document.querySelector("#exec").addEventListener("click",function () {
-    let dataSet = [];
+    //내부 초기화
+    dataSet = [];
+    tbody.innerHTML = '';
+    중단플래그 = false;
+    열은칸 = 0;
+    result.textContent = ""
+
     const hor = parseInt(document.querySelector("#hor").value);
     const ver = parseInt(document.querySelector("#ver").value);
     const mine = parseInt(document.querySelector("#mine").value);
@@ -20,7 +30,6 @@ document.querySelector("#exec").addEventListener("click",function () {
     }
 
     //지뢰 테이블 만들기
-    tbody.innerHTML = '';
     for(i = 0; i < hor; i++){
         let arr = [];
         const tr = document.createElement('tr');
@@ -31,6 +40,9 @@ document.querySelector("#exec").addEventListener("click",function () {
             //우클릭시,
             td.addEventListener("contextmenu",function (e) {
                 e.preventDefault();
+                if(중단플래그){
+                    return;
+                }
                 //몇번째 줄, 칸인지 확인하기, 깃발 꽂기
                 let 부모tr = e.currentTarget.parentNode;
                 let 부모tbody = e.currentTarget.parentNode.parentNode;
@@ -44,21 +56,31 @@ document.querySelector("#exec").addEventListener("click",function () {
                 }else if(e.currentTarget.textContent = "?"){
                     if(dataSet[칸][줄] === "X"){
                         e.currentTarget.textContent = "X";
-                    }else if(dataSet[칸][줄] === 1) {
-                        e.currentTarget.textContent = "";
+                    }else if(dataSet[칸][줄] === 0) {
+                        e.currentTarget.textContent = " ";
                     } 
                 }
             })
             //클릭시, 터지거나 or 지뢰개수
             td.addEventListener("click",function(e){
+                if(중단플래그){
+                    return;
+                }
                 e.currentTarget.classList.add("open");
                 let 부모tr = e.currentTarget.parentNode;
                 let 부모tbody = e.currentTarget.parentNode.parentNode;
                 let 줄 = Array.prototype.indexOf.call(부모tr.children, e.currentTarget);
                 let 칸 = Array.prototype.indexOf.call(부모tbody.children, 부모tr);
+                if(dataSet[칸][줄] === 1){
+                    return;
+                }
+                //지뢰 클릭시
                 if(dataSet[칸][줄] === "X"){
                     e.currentTarget.textContent = "펑";
+                    중단플래그 = true;
+                    result.textContent = "GAME OVER"
                 }else{
+                    //주변 지뢰 개수 세기
                     dataSet[칸][줄] = 1;
                     let 주변 = [dataSet[칸][줄-1], dataSet[칸][줄+1]];
                     if(dataSet[칸-1]){
@@ -94,6 +116,15 @@ document.querySelector("#exec").addEventListener("click",function () {
                             }         
                         });
                         }
+                        //열은칸 count, 지뢰 제외 전부 open시 승리
+                        if(dataSet[칸][줄] === 1){
+                            열은칸+=1;
+                            if(열은칸 === hor*ver-mine){
+                                중단플래그 = true;
+                                result.textContent = "Victory!"
+                            }
+                        }
+                        
                     }
                 })
             tr.appendChild(td);
