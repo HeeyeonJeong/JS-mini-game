@@ -1,10 +1,22 @@
+body {
+  height: 100vh;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 #screen {
-  width: 300px;
-  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 800px;
+  height: 400px;
+  border-radius: 10px;
   font-size: 25px;
   font-weight: 700;
-  text-align: center;
   user-select: none;
+  position: absolute;
 }
 
 #screen.waiting {
@@ -17,4 +29,15 @@
 
 #screen.now {
   background-color: yellowgreen;
+}
+
+.none {
+  display: none;
+}
+
+.show {
+  display: block;
+  position: relative;
+  font-weight: 700;
+  top: 50px;
 }
