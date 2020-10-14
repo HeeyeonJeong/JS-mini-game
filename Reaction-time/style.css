@@ -1,0 +1,20 @@
+#screen {
+  width: 300px;
+  height: 300px;
+  font-size: 30px;
+  font-weight: 700;
+  text-align: center;
+  user-select: none;
+}
+
+#screen.waiting {
+  background-color: teal;
+}
+
+#screen.ready {
+  background-color: tomato;
+}
+
+#screen.now {
+  background-color: yellowgreen;
+}
