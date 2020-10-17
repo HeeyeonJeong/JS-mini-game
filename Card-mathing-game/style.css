@@ -24,7 +24,6 @@
 }
 
 .card-back {
-  background-color: indianred;
   transform: rotateY(180deg);
 }
 
