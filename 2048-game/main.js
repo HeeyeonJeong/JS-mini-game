@@ -48,3 +48,39 @@ function 그리기(){
 
 초기화();
 랜덤생성();
+
+let 드래그시작 = false;
+let 드래그중 = false;
+let 시작좌표;
+let 끝좌표;
+
+window.addEventListener("mousedown", function(event){
+    드래그시작 = true;
+    시작좌표 = [event.clientX, event.clientY];
+})
+
+window.addEventListener("mouseup", function(event){
+    드래그시작 = false;
+    끝좌표 = [event.clientX, event.clientY];
+    if(드래그중){
+        let 방향;
+        let x차이 = [끝좌표[0] - 시작좌표[0]];
+        let y차이 = [끝좌표[1] - 시작좌표[1]];
+        if(x차이 > 0 && Math.abs(x차이) / Math.abs(y차이) > 1){
+            방향 = "오른쪽";
+        }else if(x차이 < 0 && Math.abs(x차이) / Math.abs(y차이) > 1){
+            방향 = "왼쪽";
+        }else if(y차이 < 0 && Math.abs(x차이) / Math.abs(y차이) < 1){
+            방향 = "위쪽";
+        }else if(y차이 > 0 && Math.abs(x차이) / Math.abs(y차이) < 1){
+            방향 = "아래쪽";
+        }
+        console.log(방향);
+    }
+})
+
+window.addEventListener("mousemove", function(event){
+    if(드래그시작){
+        드래그중 = true;
+    }
+})
