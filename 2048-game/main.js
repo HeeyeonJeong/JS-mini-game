@@ -26,9 +26,7 @@ function 랜덤생성(){
             }
         });
     });
-    console.log(빈칸배열);
     let 랜덤칸 = 빈칸배열[Math.floor(Math.random()*빈칸배열.length)];
-    console.log(랜덤칸);
     데이터[랜덤칸[0]][랜덤칸[1]] = 2;
     그리기();
 }
@@ -61,9 +59,11 @@ window.addEventListener("mousedown", function(event){
 
 window.addEventListener("mouseup", function(event){
     드래그시작 = false;
+
+    //드래그 방향 찾기
     끝좌표 = [event.clientX, event.clientY];
+    let 방향;
     if(드래그중){
-        let 방향;
         let x차이 = [끝좌표[0] - 시작좌표[0]];
         let y차이 = [끝좌표[1] - 시작좌표[1]];
         if(x차이 > 0 && Math.abs(x차이) / Math.abs(y차이) > 1){
@@ -75,9 +75,110 @@ window.addEventListener("mouseup", function(event){
         }else if(y차이 > 0 && Math.abs(x차이) / Math.abs(y차이) < 1){
             방향 = "아래쪽";
         }
-        console.log(방향);
     }
-})
+
+    //드래그 방향에 따른 숫자 이동, 숫자 합치기
+    let 새데이터;
+    switch (방향){
+        case "왼쪽":
+            새데이터 = [
+                [],
+                [],
+                [],
+                []
+            ];
+            데이터.forEach(function(열데이터,i){
+                열데이터.forEach(function(행데이터,j){
+                    if(행데이터){
+                        if(새데이터[i][새데이터[i].length -1] && 새데이터[i][새데이터[i].length -1] === 행데이터){
+                            새데이터[i][새데이터[i].length -1] *=2;
+                        }else{
+                            새데이터[i].push(행데이터);
+                        }
+                    }
+                });
+            });
+            [1,2,3,4].forEach(function(열데이터, i){
+                [1,2,3,4].forEach(function(행데이터, j){
+                    데이터[i][j] = 새데이터[i][j] || 0;
+                });
+            });    
+            break;
+        case "오른쪽":
+            새데이터 = [
+                [],
+                [],
+                [],
+                []
+            ];
+            데이터.forEach(function(열데이터,i){
+                열데이터.forEach(function(행데이터,j){
+                    if(행데이터){
+                        if(새데이터[i][0] && 새데이터[i][0] === 행데이터){
+                            새데이터[i][0] *=2;
+                        }else{
+                            새데이터[i].unshift(행데이터);
+                        }
+                    }
+                });
+            });
+            [1,2,3,4].forEach(function(열데이터, i){
+                [1,2,3,4].forEach(function(행데이터, j){
+                    데이터[i][3-j] = 새데이터[i][j] || 0;
+                });
+            });    
+            break;
+        case "위쪽":
+            새데이터 = [
+                [],
+                [],
+                [],
+                []
+            ];
+            데이터.forEach(function(열데이터,i){
+                열데이터.forEach(function(행데이터,j){
+                    if(행데이터){
+                        if(새데이터[j][새데이터[j].length -1] && 새데이터[j][새데이터[j].length -1] === 행데이터){
+                            새데이터[j][새데이터[j].length -1] *=2;
+                        }else{
+                            새데이터[j].push(행데이터);
+                        }                        
+                    }
+                });
+            });
+            [1,2,3,4].forEach(function(행데이터, i){
+                [1,2,3,4].forEach(function(열데이터, j){
+                    데이터[j][i] = 새데이터[i][j] || 0;
+                });
+            });    
+            break;
+        case "아래쪽":
+            새데이터 = [
+                [],
+                [],
+                [],
+                []
+            ];
+            데이터.forEach(function(열데이터,i){
+                열데이터.forEach(function(행데이터,j){
+                    if(행데이터){
+                        if(새데이터[j][0] && 새데이터[j][0] === 행데이터){
+                            새데이터[j][0] *=2;
+                        }else{
+                            새데이터[j].unshift(행데이터);
+                        }
+                    }
+                });
+            });
+            [1,2,3,4].forEach(function(행데이터, i){
+                [1,2,3,4].forEach(function(열데이터, j){
+                    데이터[3-j][i] = 새데이터[i][j] || 0;
+                });
+            });    
+            break;
+    }
+    랜덤생성();
+});
 
 window.addEventListener("mousemove", function(event){
     if(드래그시작){
