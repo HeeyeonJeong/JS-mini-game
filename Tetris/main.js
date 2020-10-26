@@ -1,5 +1,6 @@
 const tetris = document.querySelector("#tetris");
 let tetrisData = [];
+let stopDown = false;
 
 let blockArr = [
     //색, 움직임 가능 여부, 블럭모양
@@ -96,6 +97,7 @@ function 칸만들기 (){
 
 // 랜덤블록생성
 function 블록생성(){
+    stopDown = false;
     let 블록 = blockArr[Math.floor(Math.random()*blockArr.length)][2]
     console.log(블록);
     블록.forEach(function(tr, i){
@@ -103,16 +105,38 @@ function 블록생성(){
             tetrisData[i][j+3] =td
         })
     })
-    화면그리기(블록);
+    화면그리기();
 }
 
 // 화면그리기
-function 화면그리기(블록){
+function 화면그리기(){
     tetrisData.forEach(function(tr, i){
         tr.forEach(function(td, j){
             tetris.children[i].children[j].className = blockDict[td][0];
         })
     })
+}
+
+//블록내리기
+function 블록내리기(){
+    for(let i = tetrisData.length-1; i >= 0; i--){
+        tetrisData[i].forEach(function(td,j){
+            if(td > 0 && td < 10){
+                if(tetrisData[i+1] && !stopDown){
+                    tetrisData[i+1][j] = td;
+                    tetrisData[i][j] = 0;    
+                }else{
+                    //땅끝에 도달한 경우
+                    stopDown = true;
+                    tetrisData[i][j] = td*10;
+                }
+            }
+        })
+    }
+    if(stopDown){
+        블록생성();
+    }    
+    화면그리기();
 }
 
 window.addEventListener("keydown",function(e){
@@ -138,3 +162,5 @@ window.addEventListener("keyup",function(e){
             break;
     }
 })
+
+setInterval(블록내리기,1000);
